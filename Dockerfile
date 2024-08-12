@@ -1,7 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:20.2.0
-
-RUN npm install -g npm@latest
+FROM node:latest
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
