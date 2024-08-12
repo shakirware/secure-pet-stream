@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
+const logger = require('./src/utils/logger');
 const authRoutes = require('./routes/auth');
 const streamRoutes = require('./routes/stream');
 const liveRoutes = require('./routes/liveRoutes');
