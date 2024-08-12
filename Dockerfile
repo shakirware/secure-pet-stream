@@ -4,14 +4,16 @@ FROM node:20.2.0
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json from the server directory
+# Install FFmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
+# Copy package.json and package-lock.json before other files to leverage Docker's cache
 COPY server/package*.json ./
 
 # Install any needed packages
 RUN npm install
 
-# Install FFmpeg
-RUN apt-get update && apt-get install -y ffmpeg
+RUN npm list dotenv
 
 # Bundle app source from the server directory
 COPY server/ .
