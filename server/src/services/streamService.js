@@ -23,7 +23,11 @@ const generateExpiringStreamUrl = (streamKey, expirationDuration) => {
     .update(dataToSign)
     .digest('hex');
 
-  return `/live/${streamKey}/index.m3u8?expires=${expiresAt}&signature=${signature}`;
+  const url = `/live/${streamKey}/index.m3u8?expires=${expiresAt}&signature=${signature}`;
+  
+  logger.info('Generated expiring stream URL', { streamKey, expiresAt, url });
+  
+  return url;
 };
 
 /**
@@ -46,8 +50,16 @@ const initializeFFmpegStream = (deviceId, outputDir) => {
     .outputOptions('-hls_flags delete_segments')
     .output(path.join(outputDir, 'index.m3u8'));
 
+  stream.on('start', (commandLine) => {
+    logger.info('FFmpeg process started', { deviceId, commandLine });
+  });
+
   stream.on('error', (err) => {
-    logger.error('FFmpeg encountered an error:', { error: err.message });
+    logger.error('FFmpeg encountered an error', { deviceId, error: err.message });
+  });
+
+  stream.on('end', () => {
+    logger.info('FFmpeg process ended', { deviceId });
   });
 
   stream.run();
@@ -62,6 +74,7 @@ const initializeFFmpegStream = (deviceId, outputDir) => {
  */
 const startStream = (deviceId) => {
   if (activeStreams.has(deviceId)) {
+    logger.warn('Attempted to start a stream that is already active', { deviceId });
     throw new Error('Stream is already active for this device');
   }
   
@@ -87,6 +100,7 @@ const startStream = (deviceId) => {
 const stopStream = (deviceId) => {
   const streamData = activeStreams.get(deviceId);
   if (!streamData) {
+    logger.warn('Attempted to stop a stream that is not active', { deviceId });
     throw new Error('No active stream found for this device');
   }
   
@@ -105,7 +119,9 @@ const stopStream = (deviceId) => {
  * @returns {string} - The expiring URL for the stream.
  */
 const getStreamUrl = (streamKey, duration = 300) => {
-  return generateExpiringStreamUrl(streamKey, duration);
+  const url = generateExpiringStreamUrl(streamKey, duration);
+  logger.info('Retrieved stream URL', { streamKey, duration, url });
+  return url;
 };
 
 module.exports = { startStream, stopStream, getStreamUrl };

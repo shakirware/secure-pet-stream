@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser, refreshToken } = require('../services/authService');
+const { registerUser, loginUser, refreshUserToken } = require('../services/authService');
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.post('/login', async (req, res, next) => {
 router.post('/refresh-token', async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
-    const tokens = await refreshToken(refreshToken);
+    const tokens = await refreshUserToken(refreshToken);
     res.json(tokens);
   } catch (error) {
     next(error);
