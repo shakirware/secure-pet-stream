@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const authRoutes = require('./routes/auth');
 const streamRoutes = require('./routes/stream');
+const liveRoutes = require('./routes/liveRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(limiter);
 
 app.use('/auth', authRoutes);
 app.use('/stream', streamRoutes);
+app.use('/live', liveRoutes);
 
 app.use(errorHandler);
 
