@@ -13,7 +13,7 @@ COPY server/package*.json ./
 # Install any needed packages
 RUN npm install
 
-RUN npm list dotenv
+RUN npm install --save dotenv
 
 # Bundle app source from the server directory
 COPY server/ .
