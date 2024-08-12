@@ -8,6 +8,17 @@ const logger = require('../utils/logger');
 const activeStreams = new Map();
 
 /**
+ * Generates a consistent stream key using device ID and the current date.
+ * 
+ * @param {number} deviceId - The ID of the video device.
+ * @returns {string} - The generated stream key.
+ */
+const generateStreamKey = (deviceId) => {
+  const timestamp = new Date().toISOString().split('T')[0]; // Use date for consistency within a day
+  return `stream_${deviceId}_${timestamp}`;
+};
+
+/**
  * Generates a temporary URL for accessing the stream.
  * 
  * @param {string} streamKey - The unique key for the stream.
@@ -78,7 +89,7 @@ const startStream = (deviceId) => {
     throw new Error('Stream is already active for this device');
   }
   
-  const streamKey = `stream_${deviceId}_${Date.now()}`;
+  const streamKey = generateStreamKey(deviceId); // Use the consistent stream key generator
   const outputDir = path.join(__dirname, '..', 'streams', streamKey);
   
   // Ensure the output directory exists
@@ -98,13 +109,15 @@ const startStream = (deviceId) => {
  * @param {number} deviceId - The ID of the video device whose stream should be stopped.
  */
 const stopStream = (deviceId) => {
+  const streamKey = generateStreamKey(deviceId); // Ensure consistent stream key usage
   const streamData = activeStreams.get(deviceId);
+
   if (!streamData) {
     logger.warn('Attempted to stop a stream that is not active', { deviceId });
     throw new Error('No active stream found for this device');
   }
   
-  const { stream, streamKey } = streamData;
+  const { stream } = streamData;
   stream.kill('SIGINT');
   activeStreams.delete(deviceId);
 
@@ -114,13 +127,14 @@ const stopStream = (deviceId) => {
 /**
  * Retrieves the URL for accessing the stream, with an expiration time.
  * 
- * @param {string} streamKey - The unique key for the stream.
+ * @param {number} deviceId - The ID of the video device.
  * @param {number} [duration=300] - The duration in seconds for which the URL is valid. Defaults to 5 minutes.
  * @returns {string} - The expiring URL for the stream.
  */
-const getStreamUrl = (streamKey, duration = 300) => {
+const getStreamUrl = (deviceId, duration = 300) => {
+  const streamKey = generateStreamKey(deviceId); // Use the consistent stream key generator
   const url = generateExpiringStreamUrl(streamKey, duration);
-  logger.info('Retrieved stream URL', { streamKey, duration, url });
+  logger.info('Retrieved stream URL', { deviceId, streamKey, duration, url });
   return url;
 };
 
