@@ -1,5 +1,4 @@
 version: '3'
-
 services:
   app:
     build: .
@@ -8,18 +7,19 @@ services:
     environment:
       - MONGODB_URI=mongodb://mongo:27017/streamingapp
       - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - STREAM_KEY=${STREAM_KEY}
+      - URL_SECRET_KEY=${URL_SECRET_KEY}
     depends_on:
       - mongo
     volumes:
-      - ./src:/usr/src/app/src
-      - ./logs:/usr/src/app/logs
-
+      - ./server:/usr/src/app
   mongo:
     image: mongo:4.4
     volumes:
       - mongo-data:/data/db
     ports:
       - "27017:27017"
-
 volumes:
   mongo-data:
