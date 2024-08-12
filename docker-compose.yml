@@ -7,10 +7,10 @@ services:
     environment:
       - MONGODB_URI=mongodb://mongo:27017/streamingapp
       - NODE_ENV=production
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
-      - STREAM_KEY=${STREAM_KEY}
-      - URL_SECRET_KEY=${URL_SECRET_KEY}
+      - JWT_SECRET=sK8eLz1P3OqA6X9fFj7uHr4Dg1CkVb2U
+      - JWT_REFRESH_SECRET=Lg4QmZ5N8yVtRw2PuTbFj3OqKx7Gv9Lj
+      - STREAM_KEY=E2hF8WqT1YpM6c0Uj9XrK7Vb3Lz2AoP4
+      - URL_SECRET_KEY=T5UoN1Ym9RfVx6Dz4GqKp8L3Qw7Mb2Ao
     depends_on:
       - mongo
   mongo:

@@ -1,4 +1,3 @@
-require('dotenv').config();
 const app = require('./src/app'); // Import the Express app
 const connectDB = require('./src/config/database'); // Import the database connection function
 const logger = require('./src/utils/logger'); // Import the logger

@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y ffmpeg
 # Install npm dependencies manually
 RUN npm install bcrypt \
     crypto-js \
-    dotenv \
     express \
     express-rate-limit \
     fluent-ffmpeg \
