@@ -25,9 +25,8 @@ const generateTokens = (user) => {
  */
 const registerUser = async (username, password) => {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashedPassword });
-    await user.save();
+    const user = new User({ username, password }); // No need to hash the password here
+    await user.save(); // The password will be hashed in the 'pre' save hook in the User model
     logger.info('User registered successfully', { username });
     return user;
   } catch (error) {
