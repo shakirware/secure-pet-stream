@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
 const authRoutes = require('./routes/auth');
 const streamRoutes = require('./routes/stream');
 const liveRoutes = require('./routes/liveRoutes');
@@ -19,6 +20,12 @@ const limiter = rateLimit({
   max: 100 // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
+
+app.use(morgan('combined', {
+  stream: {
+    write: (message) => logger.info(message.trim())
+  }
+}));
 
 app.use('/auth', authRoutes);
 app.use('/stream', streamRoutes);

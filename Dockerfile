@@ -18,6 +18,7 @@ RUN npm install bcrypt \
     jsonwebtoken \
     mongoose \
     node-media-server \
+	morgan \
     winston
 
 # Copy the rest of the application source code to the container

@@ -1,41 +1,26 @@
 require('dotenv').config();
-const app = require('./src/app');
-const connectDB = require('./src/config/database');
-const logger = require('./src/utils/logger');
-const NodeMediaServer = require('node-media-server');
+const app = require('./src/app'); // Import the Express app
+const connectDB = require('./src/config/database'); // Import the database connection function
+const logger = require('./src/utils/logger'); // Import the logger
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3001; // Define the port
 
-const nmsConfig = {
-  rtmp: {
-    port: 1935,
-    chunk_size: 60000,
-    gop_cache: true,
-    ping: 30,
-    ping_timeout: 60
-  },
-  http: {
-    port: 8000,
-    allow_origin: '*'
-  }
-};
-
-const nms = new NodeMediaServer(nmsConfig);
-
+// Function to start the server
 const startServer = async () => {
   try {
+    // Connect to the database
     await connectDB();
     
+    // Start the Express server
     app.listen(port, () => {
       logger.info(`Server running on port ${port}`);
     });
-
-    nms.run();
-    logger.info('RTMP server started');
   } catch (error) {
+    // Log any errors and exit the process
     logger.error('Failed to start server', { error: error.message });
     process.exit(1);
   }
 };
 
+// Call the startServer function to initiate the server
 startServer();
