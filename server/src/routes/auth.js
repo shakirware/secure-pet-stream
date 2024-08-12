@@ -1,10 +1,9 @@
 const express = require('express');
 const { registerUser, loginUser, refreshToken } = require('../services/authService');
-const localHostOnly = require('../middleware/localHostOnly');
 
 const router = express.Router();
 
-router.post('/register', localHostOnly, async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
   try {
     const { username, password } = req.body;
     await registerUser(username, password);
