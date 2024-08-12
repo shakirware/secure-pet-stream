@@ -13,8 +13,6 @@ services:
       - URL_SECRET_KEY=${URL_SECRET_KEY}
     depends_on:
       - mongo
-    volumes:
-      - ./server:/usr/src/app
   mongo:
     image: mongo:4.4
     volumes:
