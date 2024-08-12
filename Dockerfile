@@ -18,6 +18,8 @@ RUN npm list dotenv
 # Bundle app source from the server directory
 COPY server/ .
 
+RUN pwd && ls -la
+
 # Make port 3001 available to the world outside this container
 EXPOSE 3001
 
