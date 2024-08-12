@@ -11,6 +11,9 @@ services:
       - JWT_REFRESH_SECRET=Lg4QmZ5N8yVtRw2PuTbFj3OqKx7Gv9Lj
       - STREAM_KEY=E2hF8WqT1YpM6c0Uj9XrK7Vb3Lz2AoP4
       - URL_SECRET_KEY=T5UoN1Ym9RfVx6Dz4GqKp8L3Qw7Mb2Ao
+       devices:
+      - "/dev/video0:/dev/video0"
+      - "/dev/video1:/dev/video1"  # Add more devices as needed
     depends_on:
       - mongo
   mongo:
