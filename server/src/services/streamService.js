@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
 const fs = require('fs');
@@ -27,14 +26,7 @@ const generateStreamKey = (deviceId) => {
  */
 const generateExpiringStreamUrl = (streamKey, expirationDuration) => {
   const expiresAt = Math.floor(Date.now() / 1000) + expirationDuration;
-  const dataToSign = `${streamKey}${expiresAt}`;
-  
-  const signature = crypto
-    .createHmac('sha256', process.env.URL_SECRET_KEY)
-    .update(dataToSign)
-    .digest('hex');
-
-  const url = `/live/${streamKey}/index.m3u8?expires=${expiresAt}&signature=${signature}`;
+  const url = `/live/${streamKey}/index.m3u8?expires=${expiresAt}`;
   
   logger.info('Generated expiring stream URL', { streamKey, expiresAt, url });
   
@@ -89,7 +81,7 @@ const startStream = (deviceId) => {
     throw new Error('Stream is already active for this device');
   }
   
-  const streamKey = generateStreamKey(deviceId); // Use the consistent stream key generator
+  const streamKey = generateStreamKey(deviceId);
   const outputDir = path.join(__dirname, '..', 'streams', streamKey);
   
   // Ensure the output directory exists
@@ -109,7 +101,6 @@ const startStream = (deviceId) => {
  * @param {number} deviceId - The ID of the video device whose stream should be stopped.
  */
 const stopStream = (deviceId) => {
-  const streamKey = generateStreamKey(deviceId); // Ensure consistent stream key usage
   const streamData = activeStreams.get(deviceId);
 
   if (!streamData) {
@@ -117,7 +108,7 @@ const stopStream = (deviceId) => {
     throw new Error('No active stream found for this device');
   }
   
-  const { stream } = streamData;
+  const { stream, streamKey } = streamData;
   stream.kill('SIGINT');
   activeStreams.delete(deviceId);
 
@@ -132,7 +123,7 @@ const stopStream = (deviceId) => {
  * @returns {string} - The expiring URL for the stream.
  */
 const getStreamUrl = (deviceId, duration = 300) => {
-  const streamKey = generateStreamKey(deviceId); // Use the consistent stream key generator
+  const streamKey = generateStreamKey(deviceId);
   const url = generateExpiringStreamUrl(streamKey, duration);
   logger.info('Retrieved stream URL', { deviceId, streamKey, duration, url });
   return url;
