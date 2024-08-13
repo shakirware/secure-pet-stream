@@ -11,7 +11,7 @@ router.get('/:streamKey/:fileName', (req, res) => {
   const { expires } = req.query;
 
   // Validate the temporary URL
-  if (!isValidTemporaryUrl(expires)) {
+  if (isValidTemporaryUrl(expires)) {
     return res.status(403).send('Invalid or expired URL');
   }
 
