@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const logger = require('./utils/logger');
+const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const streamRoutes = require('./routes/stream');
 const liveRoutes = require('./routes/liveRoutes');
@@ -21,6 +22,8 @@ const limiter = rateLimit({
   max: 100 // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
+
+app.use(cors());
 
 app.use(morgan('combined', {
   stream: {

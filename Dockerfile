@@ -18,6 +18,7 @@ RUN npm install bcrypt \
     mongoose \
     node-media-server \
 	morgan \
+	cors \
     winston
 
 # Copy the rest of the application source code to the container
